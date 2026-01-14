@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 
+/* Estrutura que representa um território */
 typedef struct {
     char nome[30];
     char cor[10];
@@ -11,6 +12,7 @@ typedef struct {
 
 /* ---------- FUNÇÕES ---------- */
 
+/* Cadastra os territórios dinamicamente */
 void cadastrarTerritorios(Territorio *t, int qtd) {
     for (int i = 0; i < qtd; i++) {
         printf("\nTerritorio %d\n", i + 1);
@@ -26,6 +28,7 @@ void cadastrarTerritorios(Territorio *t, int qtd) {
     }
 }
 
+/* Exibe todos os territórios */
 void exibirTerritorios(Territorio *t, int qtd) {
     printf("\n=====================================\n");
     printf("        TERRITORIOS ATUAIS\n");
@@ -37,7 +40,16 @@ void exibirTerritorios(Territorio *t, int qtd) {
     }
 }
 
+/* Simula um ataque entre dois territórios */
 void atacar(Territorio *atacante, Territorio *defensor) {
+
+    
+    if (strcmp(atacante->cor, defensor->cor) == 0) {
+        printf("\nAtaque invalido! Territorios da mesma cor.\n");
+        return;
+    }
+
+    /* Validação: atacante precisa ter ao menos 2 tropas */
     if (atacante->tropas < 2) {
         printf("\nAtaque impossivel! Tropas insuficientes.\n");
         return;
@@ -46,23 +58,34 @@ void atacar(Territorio *atacante, Territorio *defensor) {
     int dadoAtacante = rand() % 6 + 1;
     int dadoDefensor = rand() % 6 + 1;
 
-    printf("\n🎲 Ataque em andamento...\n");
+    printf("\nAtaque em andamento...\n");
     printf("Atacante (%s) rolou: %d\n", atacante->nome, dadoAtacante);
     printf("Defensor (%s) rolou: %d\n", defensor->nome, dadoDefensor);
 
+    /* Resultado do ataque */
     if (dadoAtacante > dadoDefensor) {
         printf("Atacante venceu!\n");
 
-        defensor->tropas = atacante->tropas / 2;
-        atacante->tropas -= defensor->tropas;
+        int tropasTransferidas = atacante->tropas / 2;
 
+        
+        if (tropasTransferidas < 1) {
+            tropasTransferidas = 1;
+        }
+
+        atacante->tropas -= tropasTransferidas;
+        defensor->tropas = tropasTransferidas;
+
+        
         strcpy(defensor->cor, atacante->cor);
+
     } else {
         printf("Defensor resistiu!\n");
         atacante->tropas--;
     }
 }
 
+/* Libera a memória alocada dinamicamente */
 void liberarMemoria(Territorio *t) {
     free(t);
 }
@@ -70,12 +93,13 @@ void liberarMemoria(Territorio *t) {
 /* ---------- MAIN ---------- */
 
 int main() {
-    srand(time(NULL));
+    srand(time(NULL)); 
 
     int qtd;
     printf("Quantos territorios deseja cadastrar? ");
     scanf("%d", &qtd);
 
+    
     Territorio *territorios = calloc(qtd, sizeof(Territorio));
 
     if (territorios == NULL) {
