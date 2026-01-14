@@ -1,12 +1,41 @@
 #include <stdio.h>
 #include <string.h>
+#include <string.h>
+#include <time.h>
 
 
-struct Territorio {
+typedef struct  {
     char nome[30];
     char cor[10];
     int tropas;
-};
+} Territorio;
+
+
+void cadastrarTerritorios(Territorio *t, int qtd) {
+    for (int i = 0; i < qtd; i++) {
+        printf("\nTerritorio %d\n", i + 1);
+
+        printf("Nome: ");
+        scanf("%29s", t[i].nome);
+
+        printf("Cor do exercito: ");
+        scanf("%9s", t[i].cor);
+
+        printf("Numero de tropas: ");
+        scanf("%d", &t[i].tropas);
+    }
+}
+
+void exibirTerritorios(Territorio *t, int qtd) {
+    printf("\n=====================================\n");
+    printf("        TERRITORIOS ATUAIS\n");
+    printf("=====================================\n");
+
+    for (int i = 0; i < qtd; i++) {
+        printf("[%d] %s | Cor: %s | Tropas: %d\n",
+               i, t[i].nome, t[i].cor, t[i].tropas);
+    }
+}
 
 int main() {
 
